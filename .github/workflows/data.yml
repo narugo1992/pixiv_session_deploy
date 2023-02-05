@@ -80,7 +80,7 @@ jobs:
         shell: bash
         run: |
           sudo apt-get install -y tree
-          git clone https://narugo:$HF_PASSWORD@huggingface.co/datasets/narugo/pixiv_session
+          git clone https://narugo:${{ secrets.HF_PASSWORD }}@huggingface.co/datasets/narugo/pixiv_session
           ls -al pixiv_session
       - name: Run Login Code
         env:
