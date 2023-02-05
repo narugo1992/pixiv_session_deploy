@@ -96,11 +96,10 @@ class PixivBrowser:
             self.close()
             raise ValueError('Login failed.')
 
-        return {
-            item['name']: item['value']
-            for item in self.__browser.get_cookies()
-            if item['domain'].endswith('.pixiv.net')
-        }
+        items = sorted([(item['name'], item['value'])
+                        for item in self.__browser.get_cookies()
+                        if item['domain'].endswith('.pixiv.net')])
+        return {key: value for key, value in items}
 
     @staticmethod
     def __sleep_uniform(min_sleep: float, max_sleep: float, slow: bool = True) -> None:
