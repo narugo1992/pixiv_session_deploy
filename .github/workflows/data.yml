@@ -76,68 +76,38 @@ jobs:
           pip list
           tree .
           python -m pixiv.web --help
-      - name: Run Crawler Code
+      - name: Prepare the repository
+        shell: bash
+        run: |
+          sudo apt-get install -y tree
+          git clone https://huggingface.co/datasets/narugo/pixiv_session
+          ls -al pixiv_session
+      - name: Run Login Code
         env:
           CI: 'true'
         shell: bash
         run: |
           python -m pixiv.web login --help
-          python -m pixiv.web login --username=${{ secrets.PIXIV_USERNAME }} --password=${{ secrets.PIXIV_PASSWORD }} -o cookies.json
-          head -10 cookies.json
-#          mkdir -p ${{ matrix.game }}
-#          python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
-#          python -m gchar.resources.danbooru update -g ${{ matrix.game }} -o ${{ matrix.game }}/danbooru_tags.json
-#          zip -r ${{ matrix.game }}.zip ${{ matrix.game }}
-
-#  data_upload:
-#    name: Data Upload
-#    runs-on: ${{ matrix.os }}
-#    needs: [ data_crawl ]
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        os:
-#          - 'ubuntu-latest'
-#        python-version:
-#          - '3.8'
-#
-#    steps:
-#      - name: Prepare the repository
-#        shell: bash
-#        run: |
-#          sudo apt-get install -y tree
-#          git clone https://huggingface.co/datasets/deepghs/game_characters
-#          ls -al game_characters
-#      - name: Download from artifact
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: character-database
-#          path: game_characters
-#      - name: See what is in this path
-#        shell: bash
-#        run: |
-#          cd game_characters
-#          for zfile in *.zip; do unzip -o $zfile; done
-#          rm -rf *.zip
-#          tree .
-#      - name: Push models to hugging face repostory
-#        env:
-#          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-#        run: |
-#          cd game_characters
-#          git config user.name 'narugo1992'
-#          git config user.email 'narugo@126.com'
-#          git add -A && git commit -a -m "dev(narugo): auto sync $(date -R)"
-#          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/narugo/pixiv_session main
-#      - name: Get the Numbers
-#        run: |
-#          echo "UPDATE_DATE=$(date +'%Y-%m-%d %H:%M %Z')" >> $GITHUB_ENV
-#      - name: Create Update Time Badge
-#        uses: schneegans/dynamic-badges-action@v1.0.0
-#        with:
-#          auth: ${{ secrets.GIST_SECRET }}
-#          gistID: ${{ secrets.BADGE_GIST_ID }}
-#          filename: data_last_update.json
-#          label: Data Updated
-#          message: ${{ env.UPDATE_DATE }}
-#          color: yellowgreen
+          python -m pixiv.web login --username=${{ secrets.PIXIV_USERNAME }} --password=${{ secrets.PIXIV_PASSWORD }} --slow-type -o pixiv_session/cookies.json
+          head -10 pixiv_session/cookies.json
+      - name: Push models to hugging face repostory
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cd pixiv_session
+          git config user.name 'narugo1992'
+          git config user.email 'narugo@126.com'
+          git add -A && git commit -a -m "dev(narugo): auto sync $(date -R)"
+          git push https://narugo:$HF_TOKEN@huggingface.co/datasets/narugo/pixiv_session main
+      - name: Get the Numbers
+        run: |
+          echo "UPDATE_DATE=$(date +'%Y-%m-%d %H:%M %Z')" >> $GITHUB_ENV
+      - name: Create Update Time Badge
+        uses: schneegans/dynamic-badges-action@v1.0.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: ${{ secrets.BADGE_GIST_ID }}
+          filename: data_last_update.json
+          label: Data Updated
+          message: ${{ env.UPDATE_DATE }}
+          color: yellowgreen
