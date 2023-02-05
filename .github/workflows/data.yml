@@ -81,7 +81,8 @@ jobs:
           CI: 'true'
         shell: bash
         run: |
-          echo 233
+          python -m pixiv.web --username=${{ secrets.PIXIV_USERNAME }} --password=${{ secrets.PIXIV_PASSWORD }} -o cookies.json
+          head -10 cookies.json
 #          mkdir -p ${{ matrix.game }}
 #          python -m gchar.games.${{ matrix.game }} update -o ${{ matrix.game }}/index.json
 #          python -m gchar.resources.danbooru update -g ${{ matrix.game }} -o ${{ matrix.game }}/danbooru_tags.json
