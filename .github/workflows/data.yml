@@ -89,7 +89,6 @@ jobs:
         run: |
           python -m pixiv login --help
           python -m pixiv login --username=${{ secrets.PIXIV_USERNAME }} --password=${{ secrets.PIXIV_PASSWORD }} --slow-type -o pixiv_session/session.json
-          head -10 pixiv_session/session.json
       - name: Push models to hugging face repostory
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
