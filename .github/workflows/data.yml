@@ -75,7 +75,7 @@ jobs:
           pip --version
           pip list
           tree .
-          python -m pixiv.web --help
+          python -m pixiv --help
       - name: Prepare the repository
         shell: bash
         run: |
@@ -87,9 +87,9 @@ jobs:
           CI: 'true'
         shell: bash
         run: |
-          python -m pixiv.web login --help
-          python -m pixiv.web login --username=${{ secrets.PIXIV_USERNAME }} --password=${{ secrets.PIXIV_PASSWORD }} --slow-type -o pixiv_session/cookies.json
-          head -10 pixiv_session/cookies.json
+          python -m pixiv login --help
+          python -m pixiv login --username=${{ secrets.PIXIV_USERNAME }} --password=${{ secrets.PIXIV_PASSWORD }} --slow-type -o pixiv_session/session.json
+          head -10 pixiv_session/session.json
       - name: Push models to hugging face repostory
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}

@@ -2,4 +2,5 @@ selenium>=4.7.0
 requests
 pysocks
 click>=8.0.0
-pyderman>=3.3.2
+pyderman>=3.3.0
+gppt>=3.1.0
