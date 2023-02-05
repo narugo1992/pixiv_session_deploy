@@ -108,6 +108,6 @@ jobs:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: ${{ secrets.BADGE_GIST_ID }}
           filename: data_last_update.json
-          label: Data Updated
+          label: Session Updated
           message: ${{ env.UPDATE_DATE }}
-          color: yellowgreen
+          color: blue
