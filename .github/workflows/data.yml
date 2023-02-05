@@ -3,8 +3,8 @@ name: Data Publish
 on:
   push:
   workflow_dispatch:
-#  schedule:
-#    - cron: '0 17 * * *'
+  schedule:
+    - cron: '0 16 1,8,15,22 * *'
 
 jobs:
   data_crawl:
