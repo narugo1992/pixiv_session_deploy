@@ -1,0 +1,5 @@
+DOWNLOAD_URL_TEMPLATE = 'https://huggingface.co/datasets/hf_username/reponame/resolve/main/{name}.json'
+
+PIXIV_ACCOUNTS = [
+    (('username', 'password'), 'session1'),
+]

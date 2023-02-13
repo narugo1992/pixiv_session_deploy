@@ -1215,3 +1215,4 @@ fabric.properties
 !/resource/yolort/Makefile
 /pixiv_session
 /env
+/accounts.py
