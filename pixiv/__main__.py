@@ -71,10 +71,9 @@ def batch(no_headless: bool, slow_type: bool, output_dir: str, index_filename: s
         raise ImportError('accounts.py should be placed, see accounts.py.sample for details.')
 
     os.makedirs(output_dir, exist_ok=True)
-    session_urls = []
+    session_files = []
     for (username, password), session_name in PIXIV_ACCOUNTS:
         session_file = f'{session_name}.json'
-        session_url = DOWNLOAD_URL_TEMPLATE.format(name=session_name)
 
         headless = not no_headless
         browser = PixivBrowser(headless)
@@ -94,14 +93,14 @@ def batch(no_headless: bool, slow_type: bool, output_dir: str, index_filename: s
                 'timestamp': time.time(),
             }, f, indent=4, ensure_ascii=False)
 
-        session_urls.append(session_url)
+        session_files.append(session_file)
 
     index_path = os.path.join(output_dir, index_filename)
     index_dir, _ = os.path.split(index_path)
     if index_dir:
         os.makedirs(index_dir, exist_ok=True)
     with open(index_path, 'w', encoding='utf-8') as f:
-        json.dump(session_urls, f, indent=4, ensure_ascii=False)
+        json.dump(session_files, f, indent=4, ensure_ascii=False)
 
 
 if __name__ == '__main__':
