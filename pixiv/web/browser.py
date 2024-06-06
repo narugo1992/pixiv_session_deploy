@@ -30,7 +30,7 @@ class PixivBrowser:
 
         driver_path = get_chromedriver()
         self.__browser = webdriver.Chrome(
-            service=Service(driver_path,),
+            service=Service(driver_path, ),
             options=self.__get_chrome_option(headless=headless),
             # desired_capabilities=self.caps,
         )
@@ -77,6 +77,7 @@ class PixivBrowser:
                     f"return_to={quote(redirect_url)}&lang=zh_cn&source=pc&view_type=page"
 
         self.__browser.get(login_url)
+        # time.sleep(60.0)
 
         username_element = self.__browser.find_element(
             By.XPATH, "// input [@ autocomplete ='username webauthn']")
@@ -90,9 +91,12 @@ class PixivBrowser:
         self.__sleep_uniform(0.4, 0.8, slow=slow_type)
 
         password_element.send_keys(Keys.ENTER)
-        self.__browser.find_element(By.XPATH, "// button [@ type ='submit']").click()
+        # label_selectors = [f"contains(text(), '{label}')" for label in ["ログイン", "Log In", "登录", "로그인", "登入"]]
+        # el = self.__browser.find_element(By.XPATH, f"//button[@type='submit'][{' or '.join(label_selectors)}]")
+        # el.click()
+        # self.__browser.find_element(By.XPATH, "// button [@ type ='submit']").click()
 
-        for _ in range(60):
+        for _ in range(180):
             if self.__browser.current_url[: len(redirect_url)] == redirect_url:
                 break
             time.sleep(1.0)
@@ -103,7 +107,11 @@ class PixivBrowser:
         items = sorted([(item['name'], item['value'])
                         for item in self.__browser.get_cookies()
                         if item['domain'].endswith('.pixiv.net')])
-        return {key: value for key, value in items}
+        raw_items = [
+            item for item in self.__browser.get_cookies()
+            if item['domain'].endswith('.pixiv.net')
+        ]
+        return {key: value for key, value in items}, raw_items
 
     @staticmethod
     def __sleep_uniform(min_sleep: float, max_sleep: float, slow: bool = True) -> None:

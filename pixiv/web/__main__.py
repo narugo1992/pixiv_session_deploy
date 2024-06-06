@@ -36,11 +36,12 @@ def login(username: str, password: str, no_headless: bool, slow_type: bool, outp
     headless = not no_headless
     browser = PixivBrowser(headless)
     with closing(browser):
-        cookies = browser.get_pixiv_cookie(username, password, slow_type)
+        cookies, raw_cookies = browser.get_pixiv_cookie(username, password, slow_type)
 
     with open(output, 'w', encoding='utf-8') as f:
         json.dump({
             'cookies': cookies,
+            'raw_cookies': raw_cookies,
             'username': username,
             'timestamp': time.time(),
         }, f, indent=4, ensure_ascii=False)

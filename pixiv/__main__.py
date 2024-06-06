@@ -42,7 +42,7 @@ def login(username: str, password: str, no_headless: bool, slow_type: bool, outp
 
     click.echo(click.style('Login into pixiv web ...', fg='green'))
     with closing(browser):
-        cookies = browser.get_pixiv_cookie(username, password, slow_type)
+        cookies, raw_cookies = browser.get_pixiv_cookie(username, password, slow_type)
 
     click.echo(click.style('Login into pixiv app ...', fg='green'))
     refresh_token = get_refresh_token(username, password, headless)
@@ -50,6 +50,7 @@ def login(username: str, password: str, no_headless: bool, slow_type: bool, outp
     with open(output, 'w', encoding='utf-8') as f:
         json.dump({
             'cookies': cookies,
+            'raw_cookies': raw_cookies,
             'refresh_token': refresh_token,
             'username': username,
             'timestamp': time.time(),
@@ -80,7 +81,7 @@ def batch(no_headless: bool, slow_type: bool, index_filename: str):
 
             click.echo(click.style(f'Login into pixiv web for {username!r} ...', fg='green'))
             with closing(browser):
-                cookies = browser.get_pixiv_cookie(username, password, slow_type)
+                cookies, raw_cookies = browser.get_pixiv_cookie(username, password, slow_type)
 
             click.echo(click.style(f'Login into pixiv app for {username!r} ...', fg='green'))
             refresh_token = get_refresh_token(username, password, headless)
@@ -88,6 +89,7 @@ def batch(no_headless: bool, slow_type: bool, index_filename: str):
             with open(os.path.join(output_dir, session_file), 'w', encoding='utf-8') as f:
                 json.dump({
                     'cookies': cookies,
+                    'raw_cookies': raw_cookies,
                     'refresh_token': refresh_token,
                     'username': username,
                     'timestamp': time.time(),
