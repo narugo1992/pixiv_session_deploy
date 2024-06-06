@@ -7,6 +7,7 @@ from urllib.parse import quote
 from urllib.request import getproxies
 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
@@ -29,9 +30,9 @@ class PixivBrowser:
 
         driver_path = get_chromedriver()
         self.__browser = webdriver.Chrome(
-            executable_path=driver_path,
+            service=Service(driver_path,),
             options=self.__get_chrome_option(headless=headless),
-            desired_capabilities=self.caps,
+            # desired_capabilities=self.caps,
         )
         self.__closed = False
 
@@ -76,12 +77,15 @@ class PixivBrowser:
                     f"return_to={quote(redirect_url)}&lang=zh_cn&source=pc&view_type=page"
 
         self.__browser.get(login_url)
-        username_element = self.__browser.find_element(By.XPATH, "// input [@ autocomplete ='username']")
+
+        username_element = self.__browser.find_element(
+            By.XPATH, "// input [@ autocomplete ='username webauthn']")
         self.__type_content(username_element, username, slow=slow_type)
 
         self.__sleep_uniform(0.6, 1.5, slow=slow_type)
 
-        password_element = self.__browser.find_element(By.XPATH, "// input [@ autocomplete ='current-password']")
+        password_element = self.__browser.find_element(
+            By.XPATH, "// input [@ autocomplete ='current-password webauthn']")
         self.__type_content(password_element, password, slow=slow_type)
         self.__sleep_uniform(0.4, 0.8, slow=slow_type)
 
